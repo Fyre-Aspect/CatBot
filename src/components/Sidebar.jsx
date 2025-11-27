@@ -1,8 +1,10 @@
 import React from 'react';
 import useStore from '../store/useStore';
 import SystemPromptEditor from './SystemPromptEditor';
-import { Plus, MessageSquare, Trash2, Settings, Moon, Sun, X, Search } from 'lucide-react';
+import { Plus, MessageSquare, Trash2, Settings, Moon, Sun, X, Search, LogOut } from 'lucide-react';
 import { createNewChat, deleteChat } from '../services/firebaseService';
+import { auth } from '../config/firebase';
+import { signOut } from 'firebase/auth';
 
 const Sidebar = ({ isOpen, onClose, className = "" }) => {
   const { 
@@ -51,6 +53,14 @@ const Sidebar = ({ isOpen, onClose, className = "" }) => {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Error signing out:", error);
     }
   };
 
@@ -132,12 +142,22 @@ const Sidebar = ({ isOpen, onClose, className = "" }) => {
             </div>
           </div>
           
-          <button
-            onClick={toggleTheme}
-            className="btn-ghost btn-icon"
-          >
-            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
+          <div className="flex items-center">
+            <button
+              onClick={toggleTheme}
+              className="btn-ghost btn-icon"
+              title="Toggle Theme"
+            >
+              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+            <button
+              onClick={handleSignOut}
+              className="btn-ghost btn-icon"
+              title="Sign Out"
+            >
+              <LogOut size={18} />
+            </button>
+          </div>
         </div>
       </div>
     </div>

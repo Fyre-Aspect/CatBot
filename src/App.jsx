@@ -1,35 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import ChatInterface from './components/ChatInterface';
+import Login from './components/Login';
 import useStore from './store/useStore';
-import { onAuthStateChanged, signInAnonymously } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './config/firebase';
 import { getUserChats } from './services/firebaseService';
 import { Loader2 } from 'lucide-react';
 
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const { setUser, setChats, theme } = useStore();
+  const { user, setUser, setChats, theme } = useStore();
   const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   useEffect(() => {
     // Initialize Auth
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        setUser(user);
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
         try {
-          const chats = await getUserChats(user.uid);
+          const chats = await getUserChats(currentUser.uid);
           setChats(chats);
         } catch (error) {
           console.error("Error loading chats:", error);
         }
       } else {
-        // Auto sign-in anonymously for demo purposes
-        try {
-          await signInAnonymously(auth);
-        } catch (error) {
-          console.error("Error signing in:", error);
-        }
+        setUser(null);
+        setChats([]);
       }
       setIsAuthLoading(false);
     });
@@ -58,6 +55,10 @@ function App() {
         `}</style>
       </div>
     );
+  }
+
+  if (!user) {
+    return <Login />;
   }
 
   return (
