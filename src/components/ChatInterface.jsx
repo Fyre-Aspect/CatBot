@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import useStore from '../store/useStore';
 import MessageBubble from './MessageBubble';
-import FileUploader from './FileUploader';
-import { Send, Paperclip, Menu, StopCircle, ArrowDown } from 'lucide-react';
+import { Send, Menu, StopCircle, ArrowDown } from 'lucide-react';
 import { sendMessageToGemini } from '../services/geminiService';
 import { saveMessage, createNewChat, updateChatTitle } from '../services/firebaseService';
 
@@ -21,8 +20,6 @@ const ChatInterface = ({ onMenuClick }) => {
 
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [attachments, setAttachments] = useState([]);
-  const [showUploader, setShowUploader] = useState(false);
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
 
@@ -43,15 +40,12 @@ const ChatInterface = ({ onMenuClick }) => {
   }, [input]);
 
   const handleSendMessage = async () => {
-    if ((!input.trim() && attachments.length === 0) || isLoading) return;
+    if (!input.trim() || isLoading) return;
 
     const userMessageText = input.trim();
-    const currentAttachments = [...attachments];
     
     // Clear input immediately
     setInput('');
-    setAttachments([]);
-    setShowUploader(false);
     if (textareaRef.current) textareaRef.current.style.height = 'auto';
 
     // Create new chat if none exists
@@ -83,7 +77,6 @@ const ChatInterface = ({ onMenuClick }) => {
     const userMsg = {
       role: 'user',
       content: userMessageText,
-      attachments: currentAttachments,
       timestamp: new Date().toISOString()
     };
     addMessage(userMsg);
@@ -104,7 +97,7 @@ const ChatInterface = ({ onMenuClick }) => {
         content: m.content
       }));
 
-      const stream = await sendMessageToGemini(userMessageText, history, currentAttachments, systemPrompt);
+      const stream = await sendMessageToGemini(userMessageText, history, systemPrompt);
       
       let fullResponse = "";
       const botMsgId = crypto.randomUUID();
@@ -184,8 +177,7 @@ const ChatInterface = ({ onMenuClick }) => {
             </div>
             <h2 className="text-2xl font-bold mb-2">How can I help you today?</h2>
             <p style={{ color: 'var(--muted-fg)', maxWidth: '28rem' }}>
-              I can help you analyze documents, summarize text, or just have a chat. 
-              Upload a PDF or image to get started.
+              I can help you answer questions, summarize text, or just have a chat.
             </p>
           </div>
         ) : (
@@ -211,53 +203,8 @@ const ChatInterface = ({ onMenuClick }) => {
       <div className="input-area">
         <div style={{ maxWidth: '48rem', margin: '0 auto', width: '100%' }}>
           
-          {/* File Uploader (Collapsible) */}
-          {showUploader && (
-            <div className="mb-4">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-xs font-medium" style={{ color: 'var(--muted-fg)' }}>Upload Files</span>
-                <button onClick={() => setShowUploader(false)} className="text-xs" style={{ color: 'var(--destructive)' }}>Close</button>
-              </div>
-              <FileUploader 
-                onFilesProcessed={(files) => setAttachments(prev => [...prev, ...files])} 
-                disabled={isLoading}
-              />
-            </div>
-          )}
-
-          {/* Attachments Preview */}
-          {attachments.length > 0 && (
-            <div className="file-preview">
-              {attachments.map((file, idx) => (
-                <div key={idx} className="file-preview-item group">
-                  {file.type.startsWith('image/') ? (
-                    <img src={file.base64} alt={file.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '0.5rem' }} />
-                  ) : (
-                    <span className="text-[10px] text-center p-1 break-all">{file.name.slice(-10)}</span>
-                  )}
-                  <button 
-                    onClick={() => setAttachments(prev => prev.filter((_, i) => i !== idx))}
-                    className="absolute -top-1 -right-1 bg-destructive text-white rounded-full p-0.5"
-                    style={{ backgroundColor: 'var(--destructive)', color: 'white', borderRadius: '50%', padding: '0.125rem', position: 'absolute', top: '-0.25rem', right: '-0.25rem' }}
-                  >
-                    <StopCircle size={12} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-
           {/* Input Box */}
           <div className="input-container">
-            <button 
-              onClick={() => setShowUploader(!showUploader)}
-              className={`btn-icon ${showUploader ? 'active' : ''}`}
-              style={{ color: showUploader ? 'var(--primary-color)' : 'var(--muted-fg)' }}
-              title="Attach files"
-            >
-              <Paperclip size={20} />
-            </button>
-            
             <textarea
               ref={textareaRef}
               value={input}
@@ -271,11 +218,11 @@ const ChatInterface = ({ onMenuClick }) => {
             
             <button
               onClick={handleSendMessage}
-              disabled={(!input.trim() && attachments.length === 0) || isLoading}
+              disabled={!input.trim() || isLoading}
               className="btn btn-primary btn-icon"
               style={{ 
-                opacity: (!input.trim() && attachments.length === 0) || isLoading ? 0.5 : 1,
-                cursor: (!input.trim() && attachments.length === 0) || isLoading ? 'not-allowed' : 'pointer'
+                opacity: !input.trim() || isLoading ? 0.5 : 1,
+                cursor: !input.trim() || isLoading ? 'not-allowed' : 'pointer'
               }}
             >
               {isLoading ? <StopCircle size={20} className="animate-spin" /> : <Send size={20} />}
