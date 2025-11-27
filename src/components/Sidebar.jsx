@@ -122,11 +122,11 @@ const Sidebar = ({ isOpen, onClose, className = "" }) => {
         <div className="flex items-center justify-between" style={{ padding: '1rem' }}>
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs" style={{ background: 'linear-gradient(to bottom right, var(--primary-color), #a855f7)' }}>
-              {user ? user.email[0].toUpperCase() : 'G'}
+              {user && user.email ? user.email[0].toUpperCase() : 'A'}
             </div>
             <div className="flex flex-col">
               <span className="text-sm font-medium truncate max-w-[120px]" style={{ maxWidth: '120px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                {user ? user.email : 'Guest User'}
+                {user && user.email ? user.email : 'Anonymous User'}
               </span>
               <span className="text-[10px]" style={{ color: 'var(--muted-fg)' }}>Free Plan</span>
             </div>
