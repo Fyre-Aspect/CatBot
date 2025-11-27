@@ -40,10 +40,13 @@ function App() {
 
   if (isAuthLoading) {
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-gpt-dark">
+      <div 
+        className="flex h-screen w-screen items-center justify-center"
+        style={{ backgroundColor: 'var(--color-gpt-dark)' }}
+      >
         <div className="flex flex-col items-center gap-4">
-          <Loader2 size={40} className="text-gpt-gray-light animate-spin" />
-          <p className="text-gpt-gray">Initializing CatBot...</p>
+          <Loader2 size={40} className="animate-spin" style={{ color: 'var(--color-gpt-gray-light)' }} />
+          <p style={{ color: 'var(--color-gpt-gray)' }}>Initializing CatBot...</p>
         </div>
       </div>
     );
@@ -54,7 +57,10 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-gpt-dark text-white">
+    <div 
+      className="flex h-screen w-screen overflow-hidden text-white"
+      style={{ backgroundColor: 'var(--color-gpt-dark)' }}
+    >
       <Sidebar />
       <ChatInterface />
     </div>

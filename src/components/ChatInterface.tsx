@@ -110,7 +110,8 @@ const ChatInterface = () => {
       });
 
       for await (const chunk of stream) {
-        const chunkText = chunk.text();
+        // Handle the new @google/genai SDK response format
+        const chunkText = chunk.text || '';
         fullResponse += chunkText;
 
         // Update the last message

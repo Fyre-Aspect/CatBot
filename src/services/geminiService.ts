@@ -1,7 +1,7 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenAI } from '@google/genai';
 import type { Message } from '../types';
 
-const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
+const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
 
 export const sendMessageToGemini = async (
   message: string,
@@ -9,24 +9,39 @@ export const sendMessageToGemini = async (
   systemPrompt: string = ''
 ) => {
   try {
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-pro',
-      systemInstruction: systemPrompt,
-    });
-
     // Format history for Gemini
-    // Note: Gemini expects history to be strictly alternating user/model
-    const formattedHistory = history.map((msg) => ({
+    // Gemini requires: 1) history starts with 'user', 2) alternating user/model roles
+    let validHistory = history.filter((msg) => msg.content && msg.content.trim());
+    
+    // Ensure history starts with a user message
+    while (validHistory.length > 0 && validHistory[0].role !== 'user') {
+      validHistory = validHistory.slice(1);
+    }
+
+    // Ensure alternating pattern by removing consecutive same-role messages
+    const cleanedHistory: Message[] = [];
+    for (const msg of validHistory) {
+      const lastMsg = cleanedHistory[cleanedHistory.length - 1];
+      if (!lastMsg || lastMsg.role !== msg.role) {
+        cleanedHistory.push(msg);
+      }
+    }
+
+    const formattedHistory = cleanedHistory.map((msg) => ({
       role: msg.role === 'user' ? 'user' : ('model' as const),
       parts: [{ text: msg.content }],
     }));
 
-    const chat = model.startChat({
+    const chat = ai.chats.create({
+      model: 'gemini-2.0-flash',
       history: formattedHistory,
+      config: {
+        systemInstruction: systemPrompt,
+      },
     });
 
-    const result = await chat.sendMessageStream(message);
-    return result.stream;
+    const stream = await chat.sendMessageStream({ message });
+    return stream;
   } catch (error) {
     console.error('Error calling Gemini API:', error);
     throw error;

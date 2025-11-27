@@ -1,6 +1,42 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { StoreState, User, Chat, Message } from '../types';
+import type { Chat, Message } from '../types';
+import type { User } from 'firebase/auth';
+
+interface StoreState {
+  // User
+  user: User | null;
+  setUser: (user: User | null) => void;
+
+  // Theme
+  theme: 'dark' | 'light';
+  setTheme: (theme: 'dark' | 'light') => void;
+
+  // Chats
+  chats: Chat[];
+  setChats: (chats: Chat[]) => void;
+  addChat: (chat: Chat) => void;
+  updateChatInList: (chatId: string, updates: Partial<Chat>) => void;
+  deleteChatFromList: (chatId: string) => void;
+
+  // Current Chat
+  currentChatId: string | null;
+  setCurrentChatId: (id: string | null) => void;
+
+  // Messages
+  messages: Message[];
+  setMessages: (messages: Message[] | ((prev: Message[]) => Message[])) => void;
+  addMessage: (message: Message) => void;
+  clearMessages: () => void;
+
+  // System Prompt
+  systemPrompt: string;
+  setSystemPrompt: (prompt: string) => void;
+
+  // Sidebar
+  isSidebarOpen: boolean;
+  setSidebarOpen: (open: boolean) => void;
+}
 
 const useStore = create<StoreState>()(
   persist(
