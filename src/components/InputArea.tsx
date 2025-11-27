@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, KeyboardEvent } from 'react';
-import { Send, Square, ArrowUp } from 'lucide-react';
+import { Square, ArrowUp } from 'lucide-react';
 
 interface InputAreaProps {
   onSend: (message: string) => void;
@@ -42,9 +42,15 @@ const InputArea = ({ onSend, isLoading, onStop }: InputAreaProps) => {
   };
 
   return (
-    <div className="w-full px-4 py-4 bg-gpt-dark">
+    <div className="w-full px-4 py-4" style={{ backgroundColor: 'var(--color-gpt-dark)' }}>
       <div className="max-w-3xl mx-auto">
-        <div className="relative flex items-end bg-gpt-dark-input rounded-2xl border border-gpt-dark-border focus-within:border-gpt-gray/50 transition-colors">
+        <div 
+          className="relative flex items-end rounded-2xl transition-colors"
+          style={{ 
+            backgroundColor: 'var(--color-gpt-dark-input)',
+            border: '1px solid var(--color-gpt-dark-border)'
+          }}
+        >
           {/* Textarea */}
           <textarea
             ref={textareaRef}
@@ -52,8 +58,8 @@ const InputArea = ({ onSend, isLoading, onStop }: InputAreaProps) => {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Message CatBot..."
-            className="flex-1 bg-transparent text-white placeholder-gpt-gray resize-none 
-                       px-4 py-3 pr-12 focus:outline-none max-h-52 overflow-y-auto"
+            className="flex-1 bg-transparent text-white resize-none px-4 py-3 pr-12 focus:outline-none max-h-52 overflow-y-auto"
+            style={{ color: 'white' }}
             rows={1}
             disabled={isLoading}
           />
@@ -63,7 +69,11 @@ const InputArea = ({ onSend, isLoading, onStop }: InputAreaProps) => {
             {isLoading ? (
               <button
                 onClick={onStop}
-                className="p-2 bg-gpt-gray-light text-gpt-dark rounded-lg hover:bg-white transition-colors"
+                className="p-2 rounded-lg hover:bg-white transition-colors"
+                style={{ 
+                  backgroundColor: 'var(--color-gpt-gray-light)',
+                  color: 'var(--color-gpt-dark)'
+                }}
                 title="Stop generating"
               >
                 <Square size={16} fill="currentColor" />
@@ -72,11 +82,12 @@ const InputArea = ({ onSend, isLoading, onStop }: InputAreaProps) => {
               <button
                 onClick={handleSubmit}
                 disabled={!input.trim()}
-                className={`p-2 rounded-lg transition-colors ${
-                  input.trim()
-                    ? 'bg-white text-gpt-dark hover:bg-gpt-gray-lighter'
-                    : 'bg-gpt-dark-hover text-gpt-gray cursor-not-allowed'
-                }`}
+                className="p-2 rounded-lg transition-colors"
+                style={{ 
+                  backgroundColor: input.trim() ? 'white' : 'var(--color-gpt-dark-hover)',
+                  color: input.trim() ? 'var(--color-gpt-dark)' : 'var(--color-gpt-gray)',
+                  cursor: input.trim() ? 'pointer' : 'not-allowed'
+                }}
                 title="Send message"
               >
                 <ArrowUp size={16} />
@@ -86,7 +97,7 @@ const InputArea = ({ onSend, isLoading, onStop }: InputAreaProps) => {
         </div>
 
         {/* Disclaimer */}
-        <p className="text-center text-xs text-gpt-gray mt-2">
+        <p className="text-center text-xs mt-2" style={{ color: 'var(--color-gpt-gray)' }}>
           CatBot can make mistakes. Consider checking important information.
         </p>
       </div>

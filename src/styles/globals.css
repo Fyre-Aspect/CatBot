@@ -1,116 +1,138 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-/* ChatGPT-style base styles */
-@layer base {
-  * {
-    @apply border-gpt-dark-border;
-  }
-
-  body {
-    @apply bg-gpt-dark text-white antialiased;
-    font-family: 'Söhne', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, Cantarell, 'Noto Sans', sans-serif;
-  }
-
-  /* Custom scrollbar */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  ::-webkit-scrollbar-track {
-    @apply bg-transparent;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    @apply bg-gpt-gray/30 rounded-full;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    @apply bg-gpt-gray/50;
-  }
+/* ChatGPT Theme Variables */
+@theme {
+  --color-gpt-dark: #212121;
+  --color-gpt-dark-sidebar: #171717;
+  --color-gpt-dark-hover: #2f2f2f;
+  --color-gpt-dark-border: #343434;
+  --color-gpt-dark-input: #303030;
+  --color-gpt-gray: #676767;
+  --color-gpt-gray-light: #b4b4b4;
+  --color-gpt-gray-lighter: #ececec;
 }
 
-@layer components {
-  /* ChatGPT Message Row */
-  .message-row {
-    @apply w-full py-6;
-  }
-
-  .message-row.assistant {
-    @apply bg-gpt-dark;
-  }
-
-  .message-row.user {
-    @apply bg-gpt-dark;
-  }
-
-  /* ChatGPT Input Area */
-  .chat-input-wrapper {
-    @apply relative flex items-end w-full max-w-3xl mx-auto;
-  }
-
-  .chat-textarea {
-    @apply w-full resize-none rounded-2xl border border-gpt-dark-border bg-gpt-dark-input 
-           px-4 py-3 pr-12 text-white placeholder-gpt-gray 
-           focus:outline-none focus:ring-1 focus:ring-gpt-gray/50
-           max-h-52 overflow-y-auto;
-  }
-
-  /* Sidebar styles */
-  .sidebar-item {
-    @apply flex items-center gap-3 px-3 py-2 rounded-lg text-sm
-           text-gpt-gray-light hover:bg-gpt-dark-hover cursor-pointer
-           transition-colors duration-150;
-  }
-
-  .sidebar-item.active {
-    @apply bg-gpt-dark-hover;
-  }
-
-  /* Button styles */
-  .btn-icon {
-    @apply p-2 rounded-lg hover:bg-gpt-dark-hover transition-colors duration-150;
-  }
-
-  /* Code block styles */
-  .prose pre {
-    @apply bg-black rounded-md overflow-x-auto my-4;
-  }
-
-  .prose code {
-    @apply bg-gpt-dark-hover px-1.5 py-0.5 rounded text-sm;
-  }
-
-  .prose pre code {
-    @apply bg-transparent p-0;
-  }
+/* Base styles */
+body {
+  background-color: var(--color-gpt-dark);
+  color: white;
+  font-family: 'Söhne', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, Cantarell, 'Noto Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-@layer utilities {
-  /* Loading animation */
-  .typing-indicator span {
-    @apply w-2 h-2 bg-gpt-gray rounded-full inline-block mx-0.5;
-    animation: typing 1.4s ease-in-out infinite;
-  }
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
 
-  .typing-indicator span:nth-child(2) {
-    animation-delay: 0.2s;
-  }
+::-webkit-scrollbar-track {
+  background: transparent;
+}
 
-  .typing-indicator span:nth-child(3) {
-    animation-delay: 0.4s;
-  }
+::-webkit-scrollbar-thumb {
+  background: rgba(103, 103, 103, 0.3);
+  border-radius: 9999px;
+}
 
-  @keyframes typing {
-    0%, 60%, 100% {
-      transform: translateY(0);
-      opacity: 0.4;
-    }
-    30% {
-      transform: translateY(-4px);
-      opacity: 1;
-    }
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(103, 103, 103, 0.5);
+}
+
+/* Message row styles */
+.message-row {
+  width: 100%;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.message-row.assistant {
+  background-color: var(--color-gpt-dark);
+}
+
+.message-row.user {
+  background-color: var(--color-gpt-dark);
+}
+
+/* Sidebar item styles */
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--color-gpt-gray-light);
+  cursor: pointer;
+  transition: background-color 150ms;
+}
+
+.sidebar-item:hover {
+  background-color: var(--color-gpt-dark-hover);
+}
+
+.sidebar-item.active {
+  background-color: var(--color-gpt-dark-hover);
+}
+
+/* Button icon styles */
+.btn-icon {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 150ms;
+}
+
+.btn-icon:hover {
+  background-color: var(--color-gpt-dark-hover);
+}
+
+/* Code block styles */
+.prose pre {
+  background-color: black;
+  border-radius: 0.375rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.prose code {
+  background-color: var(--color-gpt-dark-hover);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.prose pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+/* Typing indicator animation */
+.typing-indicator span {
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: var(--color-gpt-gray);
+  border-radius: 9999px;
+  display: inline-block;
+  margin: 0 0.125rem;
+  animation: typing 1.4s ease-in-out infinite;
+}
+
+.typing-indicator span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typing {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
   }
 }

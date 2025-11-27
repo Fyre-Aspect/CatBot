@@ -152,16 +152,23 @@ const ChatInterface = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-gpt-dark overflow-hidden">
+    <div 
+      className="flex-1 flex flex-col h-full overflow-hidden"
+      style={{ backgroundColor: 'var(--color-gpt-dark)' }}
+    >
       {/* Mobile Header */}
-      <div className="md:hidden flex items-center justify-between p-3 border-b border-gpt-dark-border">
+      <div 
+        className="md:hidden flex items-center justify-between p-3"
+        style={{ borderBottom: '1px solid var(--color-gpt-dark-border)' }}
+      >
         <button
           onClick={() => setSidebarOpen(!isSidebarOpen)}
-          className="btn-icon text-gpt-gray-light"
+          className="btn-icon"
+          style={{ color: 'var(--color-gpt-gray-light)' }}
         >
           <Menu size={20} />
         </button>
-        <span className="text-sm font-medium">CatBot</span>
+        <span className="text-sm font-medium text-white">CatBot</span>
         <div className="w-8" /> {/* Spacer */}
       </div>
 
@@ -170,13 +177,16 @@ const ChatInterface = () => {
         {messages.length === 0 ? (
           /* Empty State */
           <div className="h-full flex flex-col items-center justify-center p-8">
-            <div className="w-16 h-16 rounded-full bg-gpt-dark-hover flex items-center justify-center mb-6">
-              <Sparkles size={32} className="text-gpt-gray-light" />
+            <div 
+              className="w-16 h-16 rounded-full flex items-center justify-center mb-6"
+              style={{ backgroundColor: 'var(--color-gpt-dark-hover)' }}
+            >
+              <Sparkles size={32} style={{ color: 'var(--color-gpt-gray-light)' }} />
             </div>
             <h1 className="text-2xl font-semibold text-white mb-2">
               How can I help you today?
             </h1>
-            <p className="text-gpt-gray text-center max-w-md">
+            <p className="text-center max-w-md" style={{ color: 'var(--color-gpt-gray)' }}>
               I'm CatBot, your AI assistant. Ask me anything!
             </p>
           </div>

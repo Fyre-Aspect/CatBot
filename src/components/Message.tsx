@@ -2,7 +2,7 @@ import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { Copy, Check, User, Bot } from 'lucide-react';
+import { Copy, Check, Bot } from 'lucide-react';
 import type { Message as MessageType } from '../types';
 import useStore from '../store/useStore';
 
@@ -40,12 +40,12 @@ const Message = ({ message }: MessageProps) => {
         {/* Content */}
         <div className="flex-1 min-w-0">
           {/* Role label */}
-          <div className="font-semibold text-sm mb-1">
+          <div className="font-semibold text-sm mb-1 text-white">
             {isUser ? 'You' : 'CatBot'}
           </div>
 
           {/* Message content */}
-          <div className="prose prose-invert max-w-none text-gpt-gray-lighter">
+          <div className="prose prose-invert max-w-none" style={{ color: 'var(--color-gpt-gray-lighter)' }}>
             <ReactMarkdown
               components={{
                 code({ node, inline, className, children, ...props }: any) {
@@ -57,7 +57,13 @@ const Message = ({ message }: MessageProps) => {
                     return (
                       <div className="relative group my-4">
                         {/* Language label & copy button */}
-                        <div className="flex items-center justify-between bg-gpt-dark-hover px-4 py-2 rounded-t-md text-xs text-gpt-gray-light">
+                        <div 
+                          className="flex items-center justify-between px-4 py-2 rounded-t-md text-xs"
+                          style={{ 
+                            backgroundColor: 'var(--color-gpt-dark-hover)',
+                            color: 'var(--color-gpt-gray-light)'
+                          }}
+                        >
                           <span>{match[1]}</span>
                           <button
                             onClick={() => handleCopy(codeString, codeId)}
@@ -97,7 +103,8 @@ const Message = ({ message }: MessageProps) => {
                   return (
                     <code
                       {...props}
-                      className="bg-gpt-dark-hover px-1.5 py-0.5 rounded text-sm"
+                      className="px-1.5 py-0.5 rounded text-sm"
+                      style={{ backgroundColor: 'var(--color-gpt-dark-hover)' }}
                     >
                       {children}
                     </code>

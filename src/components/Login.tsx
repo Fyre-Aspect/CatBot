@@ -21,15 +21,15 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gpt-dark p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen p-4" style={{ backgroundColor: 'var(--color-gpt-dark)' }}>
       <div className="w-full max-w-md space-y-8 text-center">
         {/* Logo */}
         <div className="flex flex-col items-center gap-4">
           <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center">
-            <MessageSquare size={32} className="text-gpt-dark" />
+            <MessageSquare size={32} style={{ color: 'var(--color-gpt-dark)' }} />
           </div>
           <h1 className="text-3xl font-semibold text-white">Welcome to CatBot</h1>
-          <p className="text-gpt-gray-light">
+          <p style={{ color: 'var(--color-gpt-gray-light)' }}>
             Sign in to start chatting with AI
           </p>
         </div>
@@ -76,7 +76,7 @@ const Login = () => {
         </button>
 
         {/* Footer */}
-        <p className="text-xs text-gpt-gray">
+        <p className="text-xs" style={{ color: 'var(--color-gpt-gray)' }}>
           By continuing, you agree to our Terms of Service and Privacy Policy
         </p>
       </div>
